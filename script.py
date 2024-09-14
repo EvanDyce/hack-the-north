@@ -41,7 +41,10 @@ else:
                 # display the image
                 # img = box_blur(img)
                 # img = noise_reduction_colour(img)
-                img = noise_reduction_bw(img)
+                # img = noise_reduction_bw(img)
+                # img = sobel_edge_detection(img)
+                img = canny_edge_detection(img)
+                # img = equalize(img)
                 
                 cv2.imwrite(f'output/{image_file}', img)
             else:
