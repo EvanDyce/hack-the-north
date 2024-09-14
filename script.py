@@ -1,19 +1,19 @@
 import os
 import cv2
 
-img = cv2.imread("mandrill.jpg", 1)
+from filters import box_blur
 
-image_folder = 'input - 202409141945'
-full_path = os.path.join('input', image_folder)
+# should be our only directory
+full_path = os.path.join('input', os.listdir('input')[0])
 
 # check if the directory exists
 if not os.path.isdir(full_path):
     print(f"The directory {full_path} does not exist.")
 else:
-    # list all files in the directory
+    # list all images in the directory
     files = os.listdir(full_path)
     
-    # only include jpg, jpeg, png
+    # can change this as we go file by file and handle videos maybe
     image_extensions = ('.jpg', '.jpeg', '.png')
     image_files = [f for f in files if f.lower().endswith(image_extensions)]
     
@@ -29,9 +29,9 @@ else:
                 print(f"Image: {image_file}, Size: {width}x{height}, Channels: {channels}")
                 
                 # display the image
-                cv2.imshow('Image', img)
-                cv2.waitKey(0)
-                cv2.destroyAllWindows()
+                img = box_blur(img)
+                
+                cv2.imwrite(f'output/{image_file}', img)
             else:
                 print(f"Failed to load image: {image_file}")
         except Exception as e:
