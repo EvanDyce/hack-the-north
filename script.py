@@ -40,7 +40,8 @@ else:
                 
                 # display the image
                 # img = box_blur(img)
-                img = noise_reduction(img)
+                # img = noise_reduction_colour(img)
+                img = noise_reduction_bw(img)
                 
                 cv2.imwrite(f'output/{image_file}', img)
             else:
