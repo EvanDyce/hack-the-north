@@ -1,0 +1,14 @@
+version: "3"
+services:
+  masvagent:
+    image: masvio/masv-agent:latest
+    container_name: masv-agent
+    user: "1000:1000"
+    environment:
+      - TZ=UTC
+    volumes:
+      - ~/masv-agent:/config
+      - ~/masv-files:/data
+    ports:
+      - 8080:8080
+    restart: unless-stopped
