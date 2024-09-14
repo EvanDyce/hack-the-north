@@ -1,10 +1,20 @@
 import os
 import cv2
 
-from filters import box_blur
+from filters import *
 
-# should be our only directory
-full_path = os.path.join('input', os.listdir('input')[0])
+# list entries in the input directory
+entries = os.listdir('input')
+
+# filter entries to find the first directory
+directories = [entry for entry in entries if os.path.isdir(os.path.join('input', entry))]
+
+# check if we have found exactly one directory
+if len(directories) == 1:
+    full_path = os.path.join('input', directories[0])
+    print(f"The directory is {full_path}.")
+else:
+    print("There is either no directory or more than one directory in the input directory.")
 
 # check if the directory exists
 if not os.path.isdir(full_path):
@@ -29,7 +39,8 @@ else:
                 print(f"Image: {image_file}, Size: {width}x{height}, Channels: {channels}")
                 
                 # display the image
-                img = box_blur(img)
+                # img = box_blur(img)
+                img = noise_reduction(img)
                 
                 cv2.imwrite(f'output/{image_file}', img)
             else:
