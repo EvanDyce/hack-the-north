@@ -13,8 +13,6 @@ def filter_images(image_file_list, filter_list):
         for file in image_file_list:
             image = cv2.imread(file)
             result = FUNCTION_NAME_TO_FUNCTION[output_option.lower()](image)
-            print(f'output/{output_option}/{file}')
-            print(result)
             cv2.imwrite(f'output/{output_option}/{file[file.rindex('/'):]}', result)
 
 def filter_videos(video_file_list, filter_list):
@@ -40,7 +38,7 @@ def to_grayscale(img):
 
 def canny_edges(img):
     img = to_grayscale(img)
-    return cv2.Canny(img,175,230)
+    return cv2.Canny(img,100,200)
 
 FUNCTION_NAME_TO_FUNCTION = {
     'blur': box_blur,

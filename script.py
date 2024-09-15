@@ -1,53 +1,29 @@
 import os
-import cv2
+import json
 
-from filters import *
+from filters import filter_images, filter_videos
 
-# list entries in the input directory
-entries = os.listdir('input')
+base_download_path = 'portal-files/Portal Downloads/Hack the North'
+package_name = os.listdir(base_download_path)[0]
 
-# filter entries to find the first directory
-directories = [entry for entry in entries if os.path.isdir(os.path.join('input', entry))]
-
-# check if we have found exactly one directory
-if len(directories) == 1:
-    full_path = os.path.join('input', directories[0])
-    print(f"The directory is {full_path}.")
-else:
-    print("There is either no directory or more than one directory in the input directory.")
+# should be our only directory
+full_path = os.path.join(base_download_path, package_name)
 
 # check if the directory exists
 if not os.path.isdir(full_path):
     print(f"The directory {full_path} does not exist.")
 else:
-    # list all images in the directory
-    files = os.listdir(full_path)
+    # get all files, image files, and the specific json file
+    all_files = os.listdir(full_path)
+    json_file = [f for f in os.listdir(full_path) if f[-4:] == 'json']
+    image_files = [f'{full_path}/{f}' for f in os.listdir(full_path) if f.lower().endswith('jpg') or f.lower().endswith('jpeg') or f.lower().endswith('png')]
+    video_files = [f'{full_path}/{f}' for f in os.listdir(full_path) if f.lower().endswith('mp4')]
     
-    # can change this as we go file by file and handle videos maybe
-    image_extensions = ('.jpg', '.jpeg', '.png')
-    image_files = [f for f in files if f.lower().endswith(image_extensions)]
+    with open(f'{full_path}/{json_file[0]}') as file:
+        metadata = json.load(file)
+        
+    image_options = metadata['image_options'].split(',')
+    video_options = metadata['video_options'].split(',')
     
-    # go through each image
-    for image_file in image_files:
-        image_path = os.path.join(full_path, image_file)
-        try:
-            img = cv2.imread(image_path)
-            
-            if img is not None:
-                # get image dimensions (height, width, channels)
-                height, width, channels = img.shape
-                print(f"Image: {image_file}, Size: {width}x{height}, Channels: {channels}")
-                
-                # display the image
-                # img = box_blur(img)
-                # img = noise_reduction_colour(img)
-                # img = noise_reduction_bw(img)
-                # img = sobel_edge_detection(img)
-                img = canny_edge_detection(img)
-                # img = equalize(img)
-                
-                cv2.imwrite(f'output/{image_file}', img)
-            else:
-                print(f"Failed to load image: {image_file}")
-        except Exception as e:
-            print(f"Error opening {image_file}: {e}")
+    filter_images(image_files, image_options)
+    filter_videos(video_files, video_options)    
