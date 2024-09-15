@@ -1,5 +1,24 @@
 import cv2
+import os
+import shutil
 import numpy as np
+
+def filter_images(image_file_list, filter_list):
+    for output_option in filter_list:
+        if os.path.exists(f'output/{output_option}'):
+            shutil.rmtree(f'output/{output_option}')
+            
+        os.mkdir(f'output/{output_option}')
+        
+        for file in image_file_list:
+            image = cv2.imread(file)
+            result = FUNCTION_NAME_TO_FUNCTION[output_option.lower()](image)
+            print(f'output/{output_option}/{file}')
+            print(result)
+            cv2.imwrite(f'output/{output_option}/{file[file.rindex('/'):]}', result)
+
+def filter_videos(video_file_list, filter_list):
+    pass
 
 def box_blur(image):
     (height, width, _) = image.shape
@@ -16,20 +35,16 @@ def noise_reduction_colour(image):
 def noise_reduction_bw(image):
     return cv2.fastNlMeansDenoising(image,None,10,7,21)
 
-def sobel_edge_detection(image):
-    # grayscale
-    image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    # blur
-    image_blur = cv2.GaussianBlur(image_gray, (3,3), 0) 
-    return cv2.Sobel(src=image_blur, ddepth=cv2.CV_64F, dx=1, dy=1, ksize=5) # Combined X and Y Sobel Edge Detection
+def to_grayscale(img):
+    return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-def canny_edge_detection(image):
-    # grayscale
-    image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    # blur
-    image_blur = cv2.GaussianBlur(image_gray, (3,3), 0) 
-    return cv2.Canny(image=image_blur, threshold1=100, threshold2=200)
+def canny_edges(img):
+    img = to_grayscale(img)
+    return cv2.Canny(img,175,230)
 
-def equalize(image):
-    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    return cv2.equalizeHist(gray_image)
+FUNCTION_NAME_TO_FUNCTION = {
+    'blur': box_blur,
+    'grayscale': to_grayscale,
+    'canny': canny_edges, 
+    'gaussian blur': box_blur
+}
