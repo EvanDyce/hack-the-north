@@ -13,7 +13,7 @@ export default function Completion() {
   })
 
   return (
-    <div className="mx-auto w-full max-w-md py-24 flex flex-col stretch">
+    <div className="mx-auto w-full max-w-md py-24 flex flex-col stretch  bg-white/50 border-2 border-white rounded">
       <form onSubmit={handleSubmit} className="flex items-center gap-3 mb-8">
         <label className="grow">
           <input
@@ -23,14 +23,14 @@ export default function Completion() {
             placeholder="Ask anything..."
           />
         </label>
-        <button type="button" onClick={stop}>
+        <button type="button" className="bg-white p-3 rounded" onClick={stop}>
           Stop
         </button>
-        <button disabled={isLoading} type="submit">
+        <button disabled={isLoading} type="submit" className="bg-white p-3 rounded">
           Send
         </button>
       </form>
-      <output>Completion result: {completion}</output>
+      {/* <output>Completion result: {completion}</output> */}
     </div>
   )
 }
