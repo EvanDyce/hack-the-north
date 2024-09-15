@@ -5,8 +5,8 @@ import './globals.css';
 const exo = Exo_2({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Deploy with Defang",
-  description: "Deploy your Next.js app with Defang.",
+  title: "autoM8",
+  // description: "Deploy your Next.js app with Defang.",
 };
 
 export default function RootLayout({
