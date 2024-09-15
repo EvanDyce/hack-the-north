@@ -1,6 +1,7 @@
 import cv2
 import os
 import shutil
+from vidstab import VidStab
 import numpy as np
 
 def filter_images(image_file_list, filter_list):
@@ -16,7 +17,18 @@ def filter_images(image_file_list, filter_list):
             cv2.imwrite(f'output/{output_option}/{output_option.replace(' ', '')}_{file[file.rindex('/')+1:]}', result)
 
 def filter_videos(video_file_list, filter_list):
-    pass
+    stabilizer = VidStab()
+
+    for output_option in filter_list:
+        if os.path.exists(f"output/{output_option}"):
+            shutil.rmtree(f"output/{output_option}")
+
+        os.mkdir(f"output/{output_option}")
+
+        for file in video_file_list:
+            image = stabilizer.stabilize(
+                input_path=file, output_path=f"output/{output_option}/{file[file.rindex('/'):]}"
+            ) 
 
 def box_blur(image):
     (height, width, _) = image.shape
