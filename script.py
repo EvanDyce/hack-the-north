@@ -21,7 +21,7 @@ else:
     
     with open(f'{full_path}/{json_file[0]}') as file:
         metadata = json.load(file)
-        
+    
     image_options = metadata['image_options'].split(',')
     video_options = metadata['video_options'].split(',')
     

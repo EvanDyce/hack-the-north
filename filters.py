@@ -13,7 +13,7 @@ def filter_images(image_file_list, filter_list):
         for file in image_file_list:
             image = cv2.imread(file)
             result = FUNCTION_NAME_TO_FUNCTION[output_option.lower()](image)
-            cv2.imwrite(f'output/{output_option}/{file[file.rindex('/'):]}', result)
+            cv2.imwrite(f'output/{output_option}/{output_option.replace(' ', '')}_{file[file.rindex('/')+1:]}', result)
 
 def filter_videos(video_file_list, filter_list):
     pass
@@ -40,9 +40,15 @@ def canny_edges(img):
     img = to_grayscale(img)
     return cv2.Canny(img,100,200)
 
+def black_and_white(img):
+    imgray = to_grayscale(img)
+    (thresh, im_bw) = cv2.threshold(imgray, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+    return im_bw
+
 FUNCTION_NAME_TO_FUNCTION = {
     'blur': box_blur,
     'grayscale': to_grayscale,
-    'canny': canny_edges, 
-    'gaussian blur': box_blur
+    'canny edges': canny_edges, 
+    'black and white': black_and_white,
+    'noise reduction': noise_reduction_colour
 }
